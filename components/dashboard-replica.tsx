@@ -40,6 +40,8 @@ type OpportunityTabId =
   | "skills"
   | "culture";
 
+type OpportunityTone = "green" | "yellow";
+
 type OpportunityTab = {
   id: OpportunityTabId;
   label: string;
@@ -47,6 +49,19 @@ type OpportunityTab = {
   panelTitle: string;
   body?: string;
   bullets?: string[];
+  tone?: OpportunityTone;
+};
+
+type JobOpportunity = {
+  id: string;
+  company: string;
+  roleTitle: string;
+  postedLabel: string;
+  logoSrc: string;
+  logoAlt: string;
+  websiteHref: string;
+  jobPostHref: string;
+  tabs: Record<OpportunityTabId, OpportunityTab>;
 };
 
 const opportunityTabOrder: OpportunityTabId[] = [
@@ -58,54 +73,185 @@ const opportunityTabOrder: OpportunityTabId[] = [
   "culture"
 ];
 
-const opportunityTabs: Record<OpportunityTabId, OpportunityTab> = {
-  jack: {
-    id: "jack",
-    label: "Jack",
-    icon: MessageSquare,
-    panelTitle: "Summary",
-    bullets: [
-      "Uplane builds AI for marketing budget optimization. You'd be a Founding AI Engineer solving a massive problem.",
-      "Your AI focus and bootstrapping experience are ideal for this Founding Engineer role.",
-      "Confirm SF base salary range and specific equity details for this Founding role."
-    ]
+const jobOpportunities: JobOpportunity[] = [
+  {
+    id: "uplane",
+    company: "Uplane",
+    roleTitle: "Founding AI Engineer",
+    postedLabel: "Posted last month",
+    logoSrc: "/uplane-logo.jpg",
+    logoAlt: "Uplane logo",
+    websiteHref: "https://uplane.com/",
+    jobPostHref:
+      "https://jobs.ashbyhq.com/uplane/4d643fab-1e42-4f07-b28a-d3a2ec181bc5?utm_source=jackandjill",
+    tabs: {
+      jack: {
+        id: "jack",
+        label: "Jack",
+        icon: MessageSquare,
+        panelTitle: "Summary",
+        bullets: [
+          "Uplane builds AI for marketing budget optimization. You'd be a Founding AI Engineer solving a massive problem.",
+          "Your AI focus and bootstrapping experience are ideal for this Founding Engineer role.",
+          "Confirm SF base salary range and specific equity details for this Founding role."
+        ]
+      },
+      role: {
+        id: "role",
+        label: "Role",
+        icon: Briefcase,
+        panelTitle: "Excellent on role",
+        body: "Founding AI Engineer role with full ownership aligns with candidate's search for early-stage impact."
+      },
+      location: {
+        id: "location",
+        label: "San Francisco · Onsite",
+        icon: MapPin,
+        panelTitle: "Excellent on location",
+        body: "Role is in San Francisco, a top choice location, with relocation and visa sponsorship provided."
+      },
+      compensation: {
+        id: "compensation",
+        label: "est. $90k - $110k",
+        icon: Banknote,
+        panelTitle: "Good on compensation",
+        body: "SF base salary range is not specified, but relocation support and visa sponsorship align with search criteria."
+      },
+      skills: {
+        id: "skills",
+        label: "Skills",
+        icon: Wrench,
+        panelTitle: "Excellent on skills",
+        body: "Role requires AI/ML, backend (Node.js, TS, PostgreSQL), aligning with candidate's skills and AI focus."
+      },
+      culture: {
+        id: "culture",
+        label: "Culture",
+        icon: Building2,
+        panelTitle: "Excellent on culture",
+        body: "Early-stage (YC F25), fast-moving startup culture aligns with candidate's high-intensity preference."
+      }
+    }
   },
-  role: {
-    id: "role",
-    label: "Role",
-    icon: Briefcase,
-    panelTitle: "Excellent on role",
-    body: "Founding AI Engineer role with full ownership aligns with candidate's search for early-stage impact."
+  {
+    id: "plato",
+    company: "Plato",
+    roleTitle: "Full-Stack Typescript Product Engineer",
+    postedLabel: "Posted last month",
+    logoSrc: "/platoapp.jpeg",
+    logoAlt: "Plato logo",
+    websiteHref: "https://platoapp.com/",
+    jobPostHref: "https://platoapp.com/careers",
+    tabs: {
+      jack: {
+        id: "jack",
+        label: "Jack",
+        icon: MessageSquare,
+        panelTitle: "Summary",
+        tone: "yellow",
+        bullets: [
+          "AI-powered wholesale platform, you'd build the core UX/UI of a category-defining SaaS product.",
+          "Full-stack TS/React experience and AI focus align with building Plato's core application.",
+          "Relocation/visa support and specific salary/equity details are not listed."
+        ]
+      },
+      role: {
+        id: "role",
+        label: "Role",
+        icon: Briefcase,
+        panelTitle: "Excellent on role",
+        body: "Founding Engineer role aligns perfectly with candidate's desired title and early-stage focus."
+      },
+      location: {
+        id: "location",
+        label: "Berlin · Hybrid",
+        icon: MapPin,
+        panelTitle: "Good on location",
+        body: "Berlin-based role aligns with secondary location preference; relocation and visa sponsorship are not explicitly mentioned."
+      },
+      compensation: {
+        id: "compensation",
+        label: "est. £60k - £80k",
+        icon: Banknote,
+        panelTitle: "Borderline on compensation",
+        tone: "yellow",
+        body: "Base salary range not disclosed, equity is mentioned but not quantified."
+      },
+      skills: {
+        id: "skills",
+        label: "Skills",
+        icon: Wrench,
+        panelTitle: "Excellent on skills",
+        body: "Role requires full-stack TypeScript/React, PostgreSQL, and systems thinking, matching candidate's stated skills and experience."
+      },
+      culture: {
+        id: "culture",
+        label: "Culture",
+        icon: Building2,
+        panelTitle: "Excellent on culture",
+        body: "Early-stage (Seed/Series A implied by VC backing), demanding workload (implied by 'rocket ship', 'push hard', 'adventurous and demanding road'), and high-potential founders ('top-tier investors', 'elite investors')."
+      }
+    }
   },
-  location: {
-    id: "location",
-    label: "San Francisco · Onsite",
-    icon: MapPin,
-    panelTitle: "Excellent on location",
-    body: "Role is in San Francisco, a top choice location, with relocation and visa sponsorship provided."
-  },
-  compensation: {
-    id: "compensation",
-    label: "est. $90k - $110k",
-    icon: Banknote,
-    panelTitle: "Good on compensation",
-    body: "SF base salary range is not specified, but relocation support and visa sponsorship align with search criteria."
-  },
-  skills: {
-    id: "skills",
-    label: "Skills",
-    icon: Wrench,
-    panelTitle: "Excellent on skills",
-    body: "Role requires AI/ML, backend (Node.js, TS, PostgreSQL), aligning with candidate's skills and AI focus."
-  },
-  culture: {
-    id: "culture",
-    label: "Culture",
-    icon: Building2,
-    panelTitle: "Excellent on culture",
-    body: "Early-stage (YC F25), fast-moving startup culture aligns with candidate's high-intensity preference."
+  {
+    id: "jack-and-jill",
+    company: "Jack & Jill",
+    roleTitle: "Founding Engineer",
+    postedLabel: "Posted recently",
+    logoSrc: "/brand-logo.png",
+    logoAlt: "Jack & Jill logo",
+    websiteHref: "https://jackandjill.ai/",
+    jobPostHref: "https://jackandjill.ai/",
+    tabs: {
+      jack: {
+        id: "jack",
+        label: "Jack",
+        icon: MessageSquare,
+        panelTitle: "Summary",
+        bullets: [
+          "Jack & Jill is building AI agents for both candidates and companies, aiming to become the default infrastructure for the future labor market.",
+          "Founding Engineer role offers unusually high leverage: real product ownership, elite founders, fast growth, and strong early traction.",
+          "This is a high-intensity, high-agency environment with exceptional upside and is exactly the kind of ambitious in-person builder setup the candidate wants."
+        ]
+      },
+      role: {
+        id: "role",
+        label: "Role",
+        icon: Briefcase,
+        panelTitle: "Excellent on role",
+        body: "Founding Engineer title, deep ownership, product building at the application layer, and direct proximity to elite founders make this an exceptional fit for the candidate’s goals."
+      },
+      location: {
+        id: "location",
+        label: "London · Onsite",
+        icon: MapPin,
+        panelTitle: "Excellent on location",
+        body: "Shoreditch-based, fully in-person work is a perfect match for the candidate’s preference for London and close collaboration with high-caliber builders."
+      },
+      compensation: {
+        id: "compensation",
+        label: "£240k+ total comp",
+        icon: Banknote,
+        panelTitle: "Excellent on compensation",
+        body: "£240k+ total compensation with flexible cash/equity split is exceptional for a Founding Engineer role and strongly matches the candidate’s target upside."
+      },
+      skills: {
+        id: "skills",
+        label: "Skills",
+        icon: Wrench,
+        panelTitle: "Excellent on skills",
+        body: "Product-focused engineering across Next.js, TypeScript, Python/FastAPI, PostgreSQL, and fast iteration aligns extremely well with the candidate’s AI-native, full-stack, early-stage builder profile."
+      },
+      culture: {
+        id: "culture",
+        label: "Culture",
+        icon: Building2,
+        panelTitle: "Excellent on culture",
+        body: "Breakneck speed, high standards, founder-heavy team, in-person intensity, and ambition to redefine a massive market make this an exceptional cultural fit for the candidate."
+      }
+    }
   }
-};
+];
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -302,7 +448,12 @@ function OpportunityPill({
   return (
     <button
       type="button"
-      className={cx("opportunity-pill", active && "opportunity-pill-active")}
+      className={cx(
+        "opportunity-pill",
+        tab.tone === "yellow" && "opportunity-pill-yellow",
+        active && "opportunity-pill-active",
+        active && tab.tone === "yellow" && "opportunity-pill-active-yellow"
+      )}
       onClick={() => onSelect(tab.id)}
       aria-pressed={active}
     >
@@ -334,11 +485,11 @@ function OpportunityPanel({ tab }: { tab: OpportunityTab }) {
   );
 }
 
-function JobCard() {
+function JobCard({ job }: { job: JobOpportunity }) {
   const [activeTab, setActiveTab] = useState<OpportunityTabId>("jack");
   const [panelHeight, setPanelHeight] = useState<number | null>(null);
   const panelContentRef = useRef<HTMLDivElement>(null);
-  const activeOpportunity = opportunityTabs[activeTab];
+  const activeOpportunity = job.tabs[activeTab];
 
   useLayoutEffect(() => {
     const node = panelContentRef.current;
@@ -369,13 +520,13 @@ function JobCard() {
   }, [activeTab]);
 
   return (
-    <article className="job-card opportunity-card">
+    <article className="job-card opportunity-card opportunity-card-enter">
       <div className="opportunity-card-header">
         <div className="opportunity-card-heading">
           <div className="job-logo-tile opportunity-logo-tile">
             <Image
-              src="/uplane-logo.jpg"
-              alt="Uplane logo"
+              src={job.logoSrc}
+              alt={job.logoAlt}
               width={40}
               height={40}
               className="job-logo-image"
@@ -384,19 +535,19 @@ function JobCard() {
           </div>
 
           <div className="opportunity-meta">
-            <p className="opportunity-company-name">Uplane</p>
+            <p className="opportunity-company-name">{job.company}</p>
             <div className="opportunity-role-line">
-              <span>Founding AI Engineer</span>
+              <span>{job.roleTitle}</span>
               <span className="opportunity-meta-separator">·</span>
-              <span>Posted last month</span>
+              <span>{job.postedLabel}</span>
             </div>
           </div>
         </div>
 
         <div className="opportunity-card-actions">
-          <JobActionLink href="https://uplane.com/" icon={Globe} label="Website" />
+          <JobActionLink href={job.websiteHref} icon={Globe} label="Website" />
           <JobActionLink
-            href="https://jobs.ashbyhq.com/uplane/4d643fab-1e42-4f07-b28a-d3a2ec181bc5?utm_source=jackandjill"
+            href={job.jobPostHref}
             icon={ExternalLink}
             label="Job Post"
             primary
@@ -408,7 +559,7 @@ function JobCard() {
         {opportunityTabOrder.map((tabId) => (
           <OpportunityPill
             key={tabId}
-            tab={opportunityTabs[tabId]}
+            tab={job.tabs[tabId]}
             active={activeTab === tabId}
             onSelect={setActiveTab}
           />
@@ -416,7 +567,7 @@ function JobCard() {
       </div>
 
       <div
-        className="opportunity-panel"
+        className={cx("opportunity-panel", activeOpportunity.tone === "yellow" && "opportunity-panel-yellow")}
         style={{ height: panelHeight ? `${panelHeight}px` : "auto" }}
       >
         <div ref={panelContentRef} className="opportunity-panel-measure">
@@ -430,15 +581,18 @@ function JobCard() {
 function FooterActionButton({
   icon: Icon,
   label,
-  variant
+  variant,
+  onClick
 }: {
   icon: LucideIcon;
   label: string;
   variant: "secondary" | "neutral" | "primary";
+  onClick?: () => void;
 }) {
   return (
     <button
       type="button"
+      onClick={onClick}
       className={cx(
         "footer-action-button",
         variant === "secondary" && "footer-action-button-secondary",
@@ -454,12 +608,18 @@ function FooterActionButton({
 
 export function DashboardReplica() {
   const chatScrollRef = useRef<HTMLDivElement>(null);
+  const [currentJobIndex, setCurrentJobIndex] = useState(0);
+  const activeJob = jobOpportunities[currentJobIndex];
 
   useEffect(() => {
     if (chatScrollRef.current) {
       chatScrollRef.current.scrollTop = 92;
     }
   }, []);
+
+  const advanceJobCard = () => {
+    setCurrentJobIndex((currentIndex) => (currentIndex + 1) % jobOpportunities.length);
+  };
 
   return (
     <div className="dashboard-shell">
@@ -608,26 +768,41 @@ export function DashboardReplica() {
                   {Array.from({ length: 10 }).map((_, index) => (
                     <span
                       key={index}
-                      className={cx("jobs-dot", index === 0 && "jobs-dot-active")}
+                      className={cx("jobs-dot", index === currentJobIndex && "jobs-dot-active")}
                     />
                   ))}
                   <span className="jobs-plus-count">+26</span>
                 </div>
-                <span className="jobs-total-count">1 of 36</span>
+                <span className="jobs-total-count">{currentJobIndex + 1} of 36</span>
               </div>
             </div>
 
             <div className="jobs-surface-body">
               <div className="jobs-card-stage">
-                <JobCard />
+                <JobCard key={activeJob.id} job={activeJob} />
               </div>
             </div>
 
             <footer className="jobs-surface-footer">
               <div className="jobs-footer-actions">
-                <FooterActionButton icon={ArrowLeft} label="Not for me" variant="secondary" />
-                <FooterActionButton icon={ArrowDown} label="Skip" variant="neutral" />
-                <FooterActionButton icon={ArrowRight} label="Interested" variant="primary" />
+                <FooterActionButton
+                  icon={ArrowLeft}
+                  label="Not for me"
+                  variant="secondary"
+                  onClick={advanceJobCard}
+                />
+                <FooterActionButton
+                  icon={ArrowDown}
+                  label="Skip"
+                  variant="neutral"
+                  onClick={advanceJobCard}
+                />
+                <FooterActionButton
+                  icon={ArrowRight}
+                  label="Interested"
+                  variant="primary"
+                  onClick={advanceJobCard}
+                />
               </div>
             </footer>
           </div>
