@@ -7,6 +7,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   Archive,
   ArrowLeft,
+  ArrowRight,
   AudioLines,
   Banknote,
   Briefcase,
@@ -472,7 +473,7 @@ export function DashboardReplica() {
         <section className="jobs-panel">
           <div className="jobs-panel-topnav">
             <SectionTab icon={House} label="Home" hideLabelOnSmall />
-            <SectionTab icon={Inbox} label="Jobs" active count="32" />
+            <SectionTab icon={Inbox} label="Jobs" active count="42" />
             <SectionTab icon={UserPen} label="Profile" />
             <SectionTab icon={Briefcase} label="Jack's Brief" />
           </div>
@@ -480,7 +481,7 @@ export function DashboardReplica() {
           <div className="jobs-surface">
             <div className="jobs-surface-header">
               <div className="jobs-subtabs">
-                <JobsSubTab icon={Inbox} label="New" count="32" active />
+                <JobsSubTab icon={Inbox} label="New" count="42" active />
                 <JobsSubTab icon={Eye} label="Tracking" count="4" />
                 <JobsSubTab icon={Archive} label="Archived" />
               </div>
@@ -493,13 +494,16 @@ export function DashboardReplica() {
                       className={cx("jobs-dot", index === 9 && "jobs-dot-active")}
                     />
                   ))}
-                  <span className="jobs-plus-count">+22</span>
+                  <span className="jobs-plus-count">+32</span>
                 </div>
-                <span className="jobs-total-count">32 of 32</span>
+                <span className="jobs-total-count">34 of 42</span>
               </div>
             </div>
 
             <div className="jobs-surface-body">
+              <button type="button" className="jobs-edge-arrow" aria-label="Next job">
+                <ArrowRight className="jobs-edge-arrow-icon" />
+              </button>
               <div className="jobs-card-stage">
                 <JobCard />
               </div>
