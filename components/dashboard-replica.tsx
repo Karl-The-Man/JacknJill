@@ -2,61 +2,110 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Archive,
+  ArrowDown,
   ArrowLeft,
   ArrowRight,
   AudioLines,
   Banknote,
   Briefcase,
-  ChevronDown,
+  Building2,
   CircleCheck,
   CircleHelp,
   CircleX,
-  Earth,
-  ExternalLink,
   Eye,
+  ExternalLink,
   Gift,
+  Globe,
   House,
   Inbox,
-  Keyboard,
   MapPin,
   MessageCircleHeart,
+  MessageSquare,
   Paperclip,
   Phone,
   Settings,
   UserPen,
-  X
+  Wrench
 } from "lucide-react";
 
-type Insight = {
-  title: string;
-  body: string;
-};
+type OpportunityTabId =
+  | "jack"
+  | "role"
+  | "location"
+  | "compensation"
+  | "skills"
+  | "culture";
 
-type ChipProps = {
-  icon: LucideIcon;
+type OpportunityTab = {
+  id: OpportunityTabId;
   label: string;
-  dotted?: boolean;
-  italic?: boolean;
+  icon: LucideIcon;
+  panelTitle: string;
+  body?: string;
+  bullets?: string[];
 };
 
-const jobInsights: Insight[] = [
-  {
-    title: "The Headlines",
-    body: "watchTowr builds preemptive exposure management tech. You'd lead backend design for critical vulnerability data at scale."
-  },
-  {
-    title: "Why is this a fit",
-    body: "Your backend skills and full-stack MVP experience are ideal for this lead backend engineering role."
-  },
-  {
-    title: "What to watch out for",
-    body: "Confirm relocation assistance and specific salary/equity details for London-based role."
-  }
+const opportunityTabOrder: OpportunityTabId[] = [
+  "jack",
+  "role",
+  "location",
+  "compensation",
+  "skills",
+  "culture"
 ];
+
+const opportunityTabs: Record<OpportunityTabId, OpportunityTab> = {
+  jack: {
+    id: "jack",
+    label: "Jack",
+    icon: MessageSquare,
+    panelTitle: "Summary",
+    bullets: [
+      "Uplane builds AI for marketing budget optimization. You'd be a Founding AI Engineer solving a massive problem.",
+      "Your AI focus and bootstrapping experience are ideal for this Founding Engineer role.",
+      "Confirm SF base salary range and specific equity details for this Founding role."
+    ]
+  },
+  role: {
+    id: "role",
+    label: "Role",
+    icon: Briefcase,
+    panelTitle: "Excellent on role",
+    body: "Founding AI Engineer role with full ownership aligns with candidate's search for early-stage impact."
+  },
+  location: {
+    id: "location",
+    label: "San Francisco · Onsite",
+    icon: MapPin,
+    panelTitle: "Excellent on location",
+    body: "Role is in San Francisco, a top choice location, with relocation and visa sponsorship provided."
+  },
+  compensation: {
+    id: "compensation",
+    label: "est. $90k - $110k",
+    icon: Banknote,
+    panelTitle: "Good on compensation",
+    body: "SF base salary range is not specified, but relocation support and visa sponsorship align with search criteria."
+  },
+  skills: {
+    id: "skills",
+    label: "Skills",
+    icon: Wrench,
+    panelTitle: "Excellent on skills",
+    body: "Role requires AI/ML, backend (Node.js, TS, PostgreSQL), aligning with candidate's skills and AI focus."
+  },
+  culture: {
+    id: "culture",
+    label: "Culture",
+    icon: Building2,
+    panelTitle: "Excellent on culture",
+    body: "Early-stage (YC F25), fast-moving startup culture aligns with candidate's high-intensity preference."
+  }
+};
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -182,7 +231,11 @@ function SectionTab({
       <span className={hideLabelOnSmall ? "section-tab-label-optional" : undefined}>
         {label}
       </span>
-      {count ? <span className={cx("section-tab-count", active && "section-tab-count-active")}>{count}</span> : null}
+      {count ? (
+        <span className={cx("section-tab-count", active && "section-tab-count-active")}>
+          {count}
+        </span>
+      ) : null}
     </button>
   );
 }
@@ -202,114 +255,139 @@ function JobsSubTab({
     <button type="button" className={cx("jobs-subtab", active && "jobs-subtab-active")}>
       <Icon className="jobs-subtab-icon" />
       <span>{label}</span>
-      {count ? <span className={cx("jobs-subtab-count", active && "jobs-subtab-count-active")}>{count}</span> : null}
+      {count ? (
+        <span className={cx("jobs-subtab-count", active && "jobs-subtab-count-active")}>
+          {count}
+        </span>
+      ) : null}
     </button>
   );
 }
 
-function IconRing({ icon: Icon }: { icon: LucideIcon }) {
+function JobActionLink({
+  href,
+  icon: Icon,
+  label,
+  primary = false
+}: {
+  href: string;
+  icon: LucideIcon;
+  label: string;
+  primary?: boolean;
+}) {
   return (
-    <span className="chip-icon-ring">
-      <span className="chip-icon-inner">
-        <Icon className="chip-icon" />
-      </span>
-    </span>
-  );
-}
-
-function InfoChip({ icon, label, dotted = false, italic = false }: ChipProps) {
-  return (
-    <div className={cx("info-chip", dotted && "info-chip-dotted", italic && "info-chip-italic")}>
-      <IconRing icon={icon} />
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={cx("job-action-link", primary && "job-action-link-primary")}
+    >
+      <Icon className="job-action-link-icon" />
       <span>{label}</span>
-    </div>
+    </a>
   );
 }
 
-function InsightBlock({ title, body }: Insight) {
+function OpportunityPill({
+  tab,
+  active,
+  onSelect
+}: {
+  tab: OpportunityTab;
+  active: boolean;
+  onSelect: (tabId: OpportunityTabId) => void;
+}) {
+  const Icon = tab.icon;
+
   return (
-    <div className="insight-block">
-      <h4>{title}</h4>
-      <p>{body}</p>
-    </div>
+    <button
+      type="button"
+      className={cx("opportunity-pill", active && "opportunity-pill-active")}
+      onClick={() => onSelect(tab.id)}
+      aria-pressed={active}
+    >
+      <Icon className="opportunity-pill-icon" />
+      <span>{tab.label}</span>
+    </button>
   );
 }
 
-function JobHeader() {
-  return (
-    <div className="job-header">
-      <div className="job-logo-tile">
-        <Image
-          src="/watchtowr-logo.jpg"
-          alt="watchTowr logo"
-          width={64}
-          height={64}
-          className="job-logo-image"
-          priority
-        />
-      </div>
-      <div className="job-header-copy">
-        <div className="job-title-row">
-          <h2>Backend Engineer</h2>
-          <button type="button" className="job-link-button" aria-label="External link">
-            <ExternalLink className="job-link-icon" />
-          </button>
-        </div>
-        <div className="job-meta">
-          <span>watchTowr</span>
-          <span className="job-meta-separator">·</span>
-          <span>Posted yesterday</span>
-          <span className="job-meta-separator">·</span>
-          <span className="job-web-source">
-            <Earth className="job-web-icon" />
-            <span>Web-sourced</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
+function OpportunityPanel({ tab }: { tab: OpportunityTab }) {
+  const Icon = tab.icon;
 
-function JobDescriptionPreview() {
   return (
-    <div className="job-description-preview">
-      <h4>Job Description</h4>
-      <div className="job-preview-content">
-        <p>Hello, let us introduce ourselves!</p>
-        <p>
-          watchTowr is the Preemptive Exposure Management capability trusted by Fortune 500
-          companies and critical infrastructure providers.
-        </p>
-        <p>
-          By combining proactive threat intelligence, real attacker telemetry, and automated red
-          teaming, watchTowr continuously identifies and validates real exposure so security teams
-          can outrun real-world threats.
-        </p>
+    <div key={tab.id} className="opportunity-panel-content">
+      <Icon className="opportunity-panel-icon" />
+      <div className="opportunity-panel-copy">
+        <h4>{tab.panelTitle}</h4>
+        {tab.bullets ? (
+          <ul className="opportunity-summary-list">
+            {tab.bullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>{tab.body}</p>
+        )}
       </div>
-      <div className="job-preview-fade" />
-      <button type="button" className="view-more-button">
-        <ChevronDown className="view-more-icon" />
-        <span>View more</span>
-      </button>
     </div>
   );
 }
 
 function JobCard() {
+  const [activeTab, setActiveTab] = useState<OpportunityTabId>("jack");
+  const activeOpportunity = opportunityTabs[activeTab];
+
   return (
-    <article className="job-card">
-      <JobHeader />
-      <div className="job-chip-row">
-        <InfoChip icon={MapPin} label="London · Onsite" />
-        <InfoChip icon={Banknote} label="est. £70k - £90k" dotted italic />
+    <article className="job-card opportunity-card">
+      <div className="opportunity-card-header">
+        <div className="opportunity-card-heading">
+          <div className="job-logo-tile opportunity-logo-tile">
+            <Image
+              src="/uplane-logo.jpg"
+              alt="Uplane logo"
+              width={40}
+              height={40}
+              className="job-logo-image"
+              priority
+            />
+          </div>
+
+          <div className="opportunity-meta">
+            <p className="opportunity-company-name">Uplane</p>
+            <div className="opportunity-role-line">
+              <span>Founding AI Engineer</span>
+              <span className="opportunity-meta-separator">·</span>
+              <span>Posted last month</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="opportunity-card-actions">
+          <JobActionLink href="https://uplane.com/" icon={Globe} label="Website" />
+          <JobActionLink
+            href="https://jobs.ashbyhq.com/uplane/4d643fab-1e42-4f07-b28a-d3a2ec181bc5?utm_source=jackandjill"
+            icon={ExternalLink}
+            label="Job Post"
+            primary
+          />
+        </div>
       </div>
-      <div className="job-insights">
-        {jobInsights.map((insight) => (
-          <InsightBlock key={insight.title} {...insight} />
+
+      <div className="opportunity-pill-row">
+        {opportunityTabOrder.map((tabId) => (
+          <OpportunityPill
+            key={tabId}
+            tab={opportunityTabs[tabId]}
+            active={activeTab === tabId}
+            onSelect={setActiveTab}
+          />
         ))}
       </div>
-      <div className="job-divider" />
-      <JobDescriptionPreview />
+
+      <div className="opportunity-panel">
+        <OpportunityPanel tab={activeOpportunity} />
+      </div>
     </article>
   );
 }
@@ -317,14 +395,22 @@ function JobCard() {
 function FooterActionButton({
   icon: Icon,
   label,
-  primary = false
+  variant
 }: {
   icon: LucideIcon;
   label: string;
-  primary?: boolean;
+  variant: "secondary" | "neutral" | "primary";
 }) {
   return (
-    <button type="button" className={cx("footer-action-button", primary && "footer-action-button-primary")}>
+    <button
+      type="button"
+      className={cx(
+        "footer-action-button",
+        variant === "secondary" && "footer-action-button-secondary",
+        variant === "neutral" && "footer-action-button-neutral",
+        variant === "primary" && "footer-action-button-primary"
+      )}
+    >
       <Icon className="footer-action-icon" />
       <span>{label}</span>
     </button>
@@ -464,16 +550,12 @@ export function DashboardReplica() {
           </div>
         </section>
 
-        <div className="panel-divider">
-          <button type="button" className="divider-handle" aria-label="Previous job">
-            <ArrowLeft className="divider-handle-icon" />
-          </button>
-        </div>
+        <div className="panel-divider" />
 
         <section className="jobs-panel">
           <div className="jobs-panel-topnav">
             <SectionTab icon={House} label="Home" hideLabelOnSmall />
-            <SectionTab icon={Inbox} label="Jobs" active count="42" />
+            <SectionTab icon={Inbox} label="Jobs" active count="36" />
             <SectionTab icon={UserPen} label="Profile" />
             <SectionTab icon={Briefcase} label="Jack's Brief" />
           </div>
@@ -481,9 +563,9 @@ export function DashboardReplica() {
           <div className="jobs-surface">
             <div className="jobs-surface-header">
               <div className="jobs-subtabs">
-                <JobsSubTab icon={Inbox} label="New" count="42" active />
-                <JobsSubTab icon={Eye} label="Tracking" count="4" />
-                <JobsSubTab icon={Archive} label="Archived" />
+                <JobsSubTab icon={Inbox} label="New" count="36" active />
+                <JobsSubTab icon={Eye} label="Tracking" count="9" />
+                <JobsSubTab icon={Archive} label="Archived" count="1" />
               </div>
 
               <div className="jobs-counter-wrap">
@@ -491,19 +573,16 @@ export function DashboardReplica() {
                   {Array.from({ length: 10 }).map((_, index) => (
                     <span
                       key={index}
-                      className={cx("jobs-dot", index === 9 && "jobs-dot-active")}
+                      className={cx("jobs-dot", index === 0 && "jobs-dot-active")}
                     />
                   ))}
-                  <span className="jobs-plus-count">+32</span>
+                  <span className="jobs-plus-count">+26</span>
                 </div>
-                <span className="jobs-total-count">34 of 42</span>
+                <span className="jobs-total-count">1 of 36</span>
               </div>
             </div>
 
             <div className="jobs-surface-body">
-              <button type="button" className="jobs-edge-arrow" aria-label="Next job">
-                <ArrowRight className="jobs-edge-arrow-icon" />
-              </button>
               <div className="jobs-card-stage">
                 <JobCard />
               </div>
@@ -511,27 +590,9 @@ export function DashboardReplica() {
 
             <footer className="jobs-surface-footer">
               <div className="jobs-footer-actions">
-                <FooterActionButton icon={X} label="Skip" />
-                <FooterActionButton icon={Eye} label="Track" primary />
-              </div>
-              <div className="jobs-footer-shortcuts">
-                <div className="shortcut-heading">
-                  <Keyboard className="shortcut-keyboard-icon" />
-                  <span>Shortcuts:</span>
-                </div>
-                <div className="shortcut-group">
-                  <span className="shortcut-pill">←</span>
-                  <span className="shortcut-pill">→</span>
-                  <span>Navigate</span>
-                </div>
-                <div className="shortcut-group">
-                  <span className="shortcut-pill">S</span>
-                  <span>Skip</span>
-                </div>
-                <div className="shortcut-group">
-                  <span className="shortcut-pill">T</span>
-                  <span>Track</span>
-                </div>
+                <FooterActionButton icon={ArrowLeft} label="Not for me" variant="secondary" />
+                <FooterActionButton icon={ArrowDown} label="Skip" variant="neutral" />
+                <FooterActionButton icon={ArrowRight} label="Interested" variant="primary" />
               </div>
             </footer>
           </div>
