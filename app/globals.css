@@ -844,11 +844,14 @@ a {
 }
 
 .opportunity-panel {
-  min-height: 150px;
-  padding: 15px 16px;
   border-radius: 16px;
   background: var(--green-panel);
   overflow: hidden;
+  transition: height 0.18s ease;
+}
+
+.opportunity-panel-measure {
+  padding: 15px 16px;
 }
 
 .opportunity-panel-content {

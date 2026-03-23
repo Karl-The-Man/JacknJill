@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Archive,
@@ -336,7 +336,37 @@ function OpportunityPanel({ tab }: { tab: OpportunityTab }) {
 
 function JobCard() {
   const [activeTab, setActiveTab] = useState<OpportunityTabId>("jack");
+  const [panelHeight, setPanelHeight] = useState<number | null>(null);
+  const panelContentRef = useRef<HTMLDivElement>(null);
   const activeOpportunity = opportunityTabs[activeTab];
+
+  useLayoutEffect(() => {
+    const node = panelContentRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    const updateHeight = () => {
+      setPanelHeight(node.offsetHeight);
+    };
+
+    updateHeight();
+
+    if (typeof ResizeObserver === "undefined") {
+      return;
+    }
+
+    const observer = new ResizeObserver(() => {
+      updateHeight();
+    });
+
+    observer.observe(node);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [activeTab]);
 
   return (
     <article className="job-card opportunity-card">
@@ -385,8 +415,13 @@ function JobCard() {
         ))}
       </div>
 
-      <div className="opportunity-panel">
-        <OpportunityPanel tab={activeOpportunity} />
+      <div
+        className="opportunity-panel"
+        style={{ height: panelHeight ? `${panelHeight}px` : "auto" }}
+      >
+        <div ref={panelContentRef} className="opportunity-panel-measure">
+          <OpportunityPanel key={activeTab} tab={activeOpportunity} />
+        </div>
       </div>
     </article>
   );
