@@ -28,6 +28,7 @@ import {
   Paperclip,
   Phone,
   Settings,
+  Users,
   UserPen,
   Wrench
 } from "lucide-react";
@@ -38,18 +39,58 @@ type OpportunityTabId =
   | "location"
   | "compensation"
   | "skills"
-  | "culture";
+  | "culture"
+  | "team";
 
 type OpportunityTone = "green" | "yellow";
+
+type OpportunityDetail = {
+  value: string;
+  note?: string;
+};
+
+type FounderProfile = {
+  photoSrc: string;
+  name: string;
+  title: string;
+  credibility: string;
+  fitAngle: string;
+  linkedinHref: string;
+};
+
+type OpportunityPanelData =
+  | {
+      variant: "body";
+      body: string;
+    }
+  | {
+      variant: "bullets";
+      bullets: string[];
+    }
+  | {
+      variant: "location";
+      visaSupport?: OpportunityDetail;
+      costOfLiving?: OpportunityDetail;
+      rent?: OpportunityDetail;
+      verdict: string;
+      ctaLabel: string;
+    }
+  | {
+      variant: "team";
+      fitSummary: string;
+      founders: [FounderProfile, FounderProfile];
+    };
+
+type LocationPanelData = Extract<OpportunityPanelData, { variant: "location" }>;
+type TeamPanelData = Extract<OpportunityPanelData, { variant: "team" }>;
 
 type OpportunityTab = {
   id: OpportunityTabId;
   label: string;
   icon: LucideIcon;
   panelTitle: string;
-  body?: string;
-  bullets?: string[];
   tone?: OpportunityTone;
+  panel: OpportunityPanelData;
 };
 
 type JobOpportunity = {
@@ -70,7 +111,8 @@ const opportunityTabOrder: OpportunityTabId[] = [
   "location",
   "compensation",
   "skills",
-  "culture"
+  "culture",
+  "team"
 ];
 
 const jobOpportunities: JobOpportunity[] = [
@@ -90,46 +132,111 @@ const jobOpportunities: JobOpportunity[] = [
         label: "Jack",
         icon: MessageSquare,
         panelTitle: "Summary",
-        bullets: [
-          "Uplane builds AI for marketing budget optimization. You'd be a Founding AI Engineer solving a massive problem.",
-          "Your AI focus and bootstrapping experience are ideal for this Founding Engineer role.",
-          "Confirm SF base salary range and specific equity details for this Founding role."
-        ]
+        panel: {
+          variant: "bullets",
+          bullets: [
+            "Uplane builds AI for marketing budget optimization. You'd be a Founding AI Engineer solving a massive problem.",
+            "Your AI focus and bootstrapping experience are ideal for this Founding Engineer role.",
+            "Confirm SF base salary range and specific equity details for this Founding role."
+          ]
+        }
       },
       role: {
         id: "role",
         label: "Role",
         icon: Briefcase,
         panelTitle: "Excellent on role",
-        body: "Founding AI Engineer role with full ownership aligns with candidate's search for early-stage impact."
+        panel: {
+          variant: "body",
+          body: "Founding AI Engineer role with full ownership aligns with candidate's search for early-stage impact."
+        }
       },
       location: {
         id: "location",
         label: "San Francisco · Onsite",
         icon: MapPin,
         panelTitle: "Excellent on location",
-        body: "Role is in San Francisco, a top choice location, with relocation and visa sponsorship provided."
+        panel: {
+          variant: "location",
+          visaSupport: {
+            value: "Supported",
+            note: "Visa sponsorship and relocation are explicitly mentioned."
+          },
+          costOfLiving: {
+            value: "$2.4k/mo",
+            note: "Typical monthly spend excluding rent in SF."
+          },
+          rent: {
+            value: "$3.8k/mo",
+            note: "Typical 1BR close to SoMa / Mission Bay."
+          },
+          verdict:
+            "High-conviction if the candidate wants max founder proximity and can handle SF burn from day one.",
+          ctaLabel: "Ask Jack about relocation"
+        }
       },
       compensation: {
         id: "compensation",
         label: "est. $90k - $110k",
         icon: Banknote,
         panelTitle: "Good on compensation",
-        body: "SF base salary range is not specified, but relocation support and visa sponsorship align with search criteria."
+        panel: {
+          variant: "body",
+          body: "SF base salary range is not specified, but relocation support and visa sponsorship align with search criteria."
+        }
       },
       skills: {
         id: "skills",
         label: "Skills",
         icon: Wrench,
         panelTitle: "Excellent on skills",
-        body: "Role requires AI/ML, backend (Node.js, TS, PostgreSQL), aligning with candidate's skills and AI focus."
+        panel: {
+          variant: "body",
+          body: "Role requires AI/ML, backend (Node.js, TS, PostgreSQL), aligning with candidate's skills and AI focus."
+        }
       },
       culture: {
         id: "culture",
         label: "Culture",
         icon: Building2,
         panelTitle: "Excellent on culture",
-        body: "Early-stage (YC F25), fast-moving startup culture aligns with candidate's high-intensity preference."
+        panel: {
+          variant: "body",
+          body: "Early-stage (YC F25), fast-moving startup culture aligns with candidate's high-intensity preference."
+        }
+      },
+      team: {
+        id: "team",
+        label: "Team",
+        icon: Users,
+        panelTitle: "Excellent on team",
+        panel: {
+          variant: "team",
+          fitSummary:
+            "Direct access to the CEO and a deeply technical founder gives this the feel of a real builder seat, not a hired-hand role.",
+          founders: [
+            {
+              photoSrc: "/uplane-founder-a.jpg",
+              name: "Julius Korfgen",
+              title: "Co-Founder & CEO",
+              credibility:
+                "Scaled 7-digit monthly ad spend and previously grew a lead platform past $10M monthly revenue.",
+              fitAngle:
+                "Strong fit if the candidate wants a commercially sharp founder who can translate product output into revenue fast.",
+              linkedinHref: "https://www.linkedin.com/in/julius-koerfgen/"
+            },
+            {
+              photoSrc: "/uplane-founder-c.jpg",
+              name: "Lukas Vollmer",
+              title: "Founder",
+              credibility:
+                "15 years of full-stack experience and former Head of Engineering at two YC-backed companies.",
+              fitAngle:
+                "Makes the role more attractive for a hands-on engineer who wants deep technical sparring from day one.",
+              linkedinHref: "https://www.linkedin.com/in/lukas-vollmer/"
+            }
+          ]
+        }
       }
     }
   },
@@ -140,8 +247,8 @@ const jobOpportunities: JobOpportunity[] = [
     postedLabel: "Posted last month",
     logoSrc: "/platoapp.jpeg",
     logoAlt: "Plato logo",
-    websiteHref: "https://platoapp.com/",
-    jobPostHref: "https://platoapp.com/careers",
+    websiteHref: "https://www.platoapp.ai/",
+    jobPostHref: "https://jobs.ashbyhq.com/platoapp",
     tabs: {
       jack: {
         id: "jack",
@@ -149,25 +256,49 @@ const jobOpportunities: JobOpportunity[] = [
         icon: MessageSquare,
         panelTitle: "Summary",
         tone: "yellow",
-        bullets: [
-          "AI-powered wholesale platform, you'd build the core UX/UI of a category-defining SaaS product.",
-          "Full-stack TS/React experience and AI focus align with building Plato's core application.",
-          "Relocation/visa support and specific salary/equity details are not listed."
-        ]
+        panel: {
+          variant: "bullets",
+          bullets: [
+            "AI-powered wholesale platform, you'd build the core UX/UI of a category-defining SaaS product.",
+            "Full-stack TS/React experience and AI focus align with building Plato's core application.",
+            "Relocation/visa support and specific salary/equity details are not listed."
+          ]
+        }
       },
       role: {
         id: "role",
         label: "Role",
         icon: Briefcase,
         panelTitle: "Excellent on role",
-        body: "Founding Engineer role aligns perfectly with candidate's desired title and early-stage focus."
+        panel: {
+          variant: "body",
+          body: "Founding Engineer role aligns perfectly with candidate's desired title and early-stage focus."
+        }
       },
       location: {
         id: "location",
         label: "Berlin · Hybrid",
         icon: MapPin,
         panelTitle: "Good on location",
-        body: "Berlin-based role aligns with secondary location preference; relocation and visa sponsorship are not explicitly mentioned."
+        tone: "yellow",
+        panel: {
+          variant: "location",
+          visaSupport: {
+            value: "Needs confirmation",
+            note: "Hybrid Berlin role, but sponsorship is not stated publicly."
+          },
+          costOfLiving: {
+            value: "EUR1.3k/mo",
+            note: "Typical monthly spend excluding rent in Berlin."
+          },
+          rent: {
+            value: "EUR1.9k/mo",
+            note: "Typical 1BR in Mitte / Prenzlauer Berg."
+          },
+          verdict:
+            "Practical if Berlin is a real second-choice base, but the candidate should ask early about relocation and office cadence.",
+          ctaLabel: "Ask Jack about relocation"
+        }
       },
       compensation: {
         id: "compensation",
@@ -175,21 +306,63 @@ const jobOpportunities: JobOpportunity[] = [
         icon: Banknote,
         panelTitle: "Borderline on compensation",
         tone: "yellow",
-        body: "Base salary range not disclosed, equity is mentioned but not quantified."
+        panel: {
+          variant: "body",
+          body: "Base salary range not disclosed, equity is mentioned but not quantified."
+        }
       },
       skills: {
         id: "skills",
         label: "Skills",
         icon: Wrench,
         panelTitle: "Excellent on skills",
-        body: "Role requires full-stack TypeScript/React, PostgreSQL, and systems thinking, matching candidate's stated skills and experience."
+        panel: {
+          variant: "body",
+          body: "Role requires full-stack TypeScript/React, PostgreSQL, and systems thinking, matching candidate's stated skills and experience."
+        }
       },
       culture: {
         id: "culture",
         label: "Culture",
         icon: Building2,
         panelTitle: "Excellent on culture",
-        body: "Early-stage (Seed/Series A implied by VC backing), demanding workload (implied by 'rocket ship', 'push hard', 'adventurous and demanding road'), and high-potential founders ('top-tier investors', 'elite investors')."
+        panel: {
+          variant: "body",
+          body: "Early-stage (Seed/Series A implied by VC backing), demanding workload (implied by 'rocket ship', 'push hard', 'adventurous and demanding road'), and high-potential founders ('top-tier investors', 'elite investors')."
+        }
+      },
+      team: {
+        id: "team",
+        label: "Team",
+        icon: Users,
+        panelTitle: "Excellent on team",
+        panel: {
+          variant: "team",
+          fitSummary:
+            "Plato reads like a founder-led operating team with domain depth, which helps this role feel close to the real product and customer pain.",
+          founders: [
+            {
+              photoSrc: "/plato-benedikt.webp",
+              name: "Benedikt Nolte",
+              title: "Founder & CEO",
+              credibility:
+                "Comes from a wholesale family business and previously worked at McKinsey and Cherry Ventures.",
+              fitAngle:
+                "Good fit for a candidate who wants a commercially grounded founder with clear customer intuition and fundraising fluency.",
+              linkedinHref: "https://www.linkedin.com/in/benediktnolte/"
+            },
+            {
+              photoSrc: "/plato-matthias.webp",
+              name: "Matthias Heinrich",
+              title: "Founder & CPO",
+              credibility:
+                "Previously built startups at Rocket Internet and advised mid-market digitization projects at Roland Berger.",
+              fitAngle:
+                "Adds confidence that product decisions will stay close to actual operator workflows, not abstract roadmap theory.",
+              linkedinHref: "https://www.linkedin.com/in/matthiasheinrichmorales/"
+            }
+          ]
+        }
       }
     }
   },
@@ -208,46 +381,111 @@ const jobOpportunities: JobOpportunity[] = [
         label: "Jack",
         icon: MessageSquare,
         panelTitle: "Summary",
-        bullets: [
-          "Jack & Jill is building AI agents for both candidates and companies, aiming to become the default infrastructure for the future labor market.",
-          "Founding Engineer role offers unusually high leverage: real product ownership, elite founders, fast growth, and strong early traction.",
-          "This is a high-intensity, high-agency environment with exceptional upside and is exactly the kind of ambitious in-person builder setup the candidate wants."
-        ]
+        panel: {
+          variant: "bullets",
+          bullets: [
+            "Jack & Jill is building AI agents for both candidates and companies, aiming to become the default infrastructure for the future labor market.",
+            "Founding Engineer role offers unusually high leverage: real product ownership, elite founders, fast growth, and strong early traction.",
+            "This is a high-intensity, high-agency environment with exceptional upside and is exactly the kind of ambitious in-person builder setup the candidate wants."
+          ]
+        }
       },
       role: {
         id: "role",
         label: "Role",
         icon: Briefcase,
         panelTitle: "Excellent on role",
-        body: "Founding Engineer title, deep ownership, product building at the application layer, and direct proximity to elite founders make this an exceptional fit for the candidate’s goals."
+        panel: {
+          variant: "body",
+          body: "Founding Engineer title, deep ownership, product building at the application layer, and direct proximity to elite founders make this an exceptional fit for the candidate’s goals."
+        }
       },
       location: {
         id: "location",
         label: "London · Onsite",
         icon: MapPin,
         panelTitle: "Excellent on location",
-        body: "Shoreditch-based, fully in-person work is a perfect match for the candidate’s preference for London and close collaboration with high-caliber builders."
+        panel: {
+          variant: "location",
+          visaSupport: {
+            value: "Needs confirmation",
+            note: "UK sponsorship is not stated publicly."
+          },
+          costOfLiving: {
+            value: "GBP1.6k/mo",
+            note: "Typical monthly spend excluding rent in East London."
+          },
+          rent: {
+            value: "GBP2.4k/mo",
+            note: "Typical 1BR around Shoreditch / Hoxton."
+          },
+          verdict:
+            "A very strong location fit if the candidate wants London and daily in-person intensity, with visa logistics worth clarifying early.",
+          ctaLabel: "Ask Jack about relocation"
+        }
       },
       compensation: {
         id: "compensation",
         label: "£240k+ total comp",
         icon: Banknote,
         panelTitle: "Excellent on compensation",
-        body: "£240k+ total compensation with flexible cash/equity split is exceptional for a Founding Engineer role and strongly matches the candidate’s target upside."
+        panel: {
+          variant: "body",
+          body: "£240k+ total compensation with flexible cash/equity split is exceptional for a Founding Engineer role and strongly matches the candidate’s target upside."
+        }
       },
       skills: {
         id: "skills",
         label: "Skills",
         icon: Wrench,
         panelTitle: "Excellent on skills",
-        body: "Product-focused engineering across Next.js, TypeScript, Python/FastAPI, PostgreSQL, and fast iteration aligns extremely well with the candidate’s AI-native, full-stack, early-stage builder profile."
+        panel: {
+          variant: "body",
+          body: "Product-focused engineering across Next.js, TypeScript, Python/FastAPI, PostgreSQL, and fast iteration aligns extremely well with the candidate’s AI-native, full-stack, early-stage builder profile."
+        }
       },
       culture: {
         id: "culture",
         label: "Culture",
         icon: Building2,
         panelTitle: "Excellent on culture",
-        body: "Breakneck speed, high standards, founder-heavy team, in-person intensity, and ambition to redefine a massive market make this an exceptional cultural fit for the candidate."
+        panel: {
+          variant: "body",
+          body: "Breakneck speed, high standards, founder-heavy team, in-person intensity, and ambition to redefine a massive market make this an exceptional cultural fit for the candidate."
+        }
+      },
+      team: {
+        id: "team",
+        label: "Team",
+        icon: Users,
+        panelTitle: "Excellent on team",
+        panel: {
+          variant: "team",
+          fitSummary:
+            "This is a classic 'work shoulder-to-shoulder with the founders' setup: high standards, direct feedback, and unusually strong founder-market credibility.",
+          founders: [
+            {
+              photoSrc: "/jnj-matthew.jpg",
+              name: "Matthew Wilson",
+              title: "Co-Founder",
+              credibility:
+                "Serial founder who previously built Omnipresent and has already scaled founder-led companies through real breakout growth.",
+              fitAngle:
+                "Appeals to candidates who want to learn from someone who has seen both hypergrowth and the tradeoffs of building category-defining companies.",
+              linkedinHref: "https://www.linkedin.com/in/matthew-wilson-671a757a/"
+            },
+            {
+              photoSrc: "/jnj-saaras.jpg",
+              name: "Saaras Mehan",
+              title: "Co-Founder",
+              credibility:
+                "Repeat founder with sharp product instincts and a public track record of shipping quickly around AI-native recruiting workflows.",
+              fitAngle:
+                "Great fit for a candidate who wants founder-level product taste, fast iteration, and a genuinely hands-on operating rhythm.",
+              linkedinHref: "https://www.linkedin.com/in/saaras-mehan/"
+            }
+          ]
+        }
       }
     }
   }
@@ -463,23 +701,133 @@ function OpportunityPill({
   );
 }
 
+function LocationPanel({ panel }: { panel: LocationPanelData }) {
+  const statItems = [
+    panel.costOfLiving
+      ? {
+          label: "Cost of living",
+          detail: panel.costOfLiving
+        }
+      : null,
+    panel.rent
+      ? {
+          label: "Rent",
+          detail: panel.rent
+        }
+      : null
+  ].filter(Boolean) as Array<{ label: string; detail: OpportunityDetail }>;
+
+  return (
+    <div className="opportunity-location-stack">
+      {panel.visaSupport ? (
+        <div className="opportunity-location-row">
+          <span className="opportunity-location-label">Visa support</span>
+          <div className="opportunity-location-detail">
+            <strong>{panel.visaSupport.value}</strong>
+            {panel.visaSupport.note ? <span>{panel.visaSupport.note}</span> : null}
+          </div>
+        </div>
+      ) : null}
+
+      {statItems.length ? (
+        <div className="opportunity-location-stats">
+          {statItems.map((item) => (
+            <div key={item.label} className="opportunity-location-stat">
+              <span className="opportunity-location-stat-label">{item.label}</span>
+              <strong className="opportunity-location-stat-value">{item.detail.value}</strong>
+              {item.detail.note ? (
+                <span className="opportunity-location-stat-note">{item.detail.note}</span>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      <p className="opportunity-location-verdict">{panel.verdict}</p>
+
+      <button type="button" className="opportunity-panel-cta">
+        <MessageSquare className="opportunity-panel-cta-icon" />
+        <span>{panel.ctaLabel}</span>
+      </button>
+    </div>
+  );
+}
+
+function FounderCard({ founder }: { founder: FounderProfile }) {
+  return (
+    <article className="opportunity-founder-card">
+      <div className="opportunity-founder-header">
+        <Image
+          src={founder.photoSrc}
+          alt={founder.name}
+          width={52}
+          height={52}
+          className="opportunity-founder-avatar"
+        />
+        <div className="opportunity-founder-meta">
+          <h5>{founder.name}</h5>
+          <p>{founder.title}</p>
+        </div>
+      </div>
+
+      <p className="opportunity-founder-credibility">{founder.credibility}</p>
+      <p className="opportunity-founder-fit">{founder.fitAngle}</p>
+
+      <a
+        href={founder.linkedinHref}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="opportunity-founder-link"
+      >
+        <span>LinkedIn</span>
+        <ExternalLink className="opportunity-founder-link-icon" />
+      </a>
+    </article>
+  );
+}
+
+function TeamPanel({ panel }: { panel: TeamPanelData }) {
+  return (
+    <div className="opportunity-team-stack">
+      <p className="opportunity-team-summary">{panel.fitSummary}</p>
+      <div className="opportunity-team-grid">
+        {panel.founders.map((founder) => (
+          <FounderCard key={founder.name} founder={founder} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function OpportunityPanel({ tab }: { tab: OpportunityTab }) {
   const Icon = tab.icon;
+  const renderPanelBody = () => {
+    switch (tab.panel.variant) {
+      case "body":
+        return <p>{tab.panel.body}</p>;
+      case "bullets":
+        return (
+          <ul className="opportunity-summary-list">
+            {tab.panel.bullets.map((bullet) => (
+              <li key={bullet}>{bullet}</li>
+            ))}
+          </ul>
+        );
+      case "location":
+        return <LocationPanel panel={tab.panel} />;
+      case "team":
+        return <TeamPanel panel={tab.panel} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div key={tab.id} className="opportunity-panel-content">
       <Icon className="opportunity-panel-icon" />
       <div className="opportunity-panel-copy">
         <h4>{tab.panelTitle}</h4>
-        {tab.bullets ? (
-          <ul className="opportunity-summary-list">
-            {tab.bullets.map((bullet) => (
-              <li key={bullet}>{bullet}</li>
-            ))}
-          </ul>
-        ) : (
-          <p>{tab.body}</p>
-        )}
+        {renderPanelBody()}
       </div>
     </div>
   );
