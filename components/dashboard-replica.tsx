@@ -425,7 +425,7 @@ const jobOpportunities: JobOpportunity[] = [
               credibility:
                 "2x Founder. {YC, EF, Cambridge, Microsoft Research}-alum. Grew Kular.ai from $0 → $3m ARR in one year.",
               fitAngle:
-                "Strong fit if you want direct access to a technical founder with strong product taste, high standards, and a clear bias toward ambitious builders starting early.",
+                "Fits your preference for working closely with a technical founder who combines strong startup pedigree, fast execution, and a clear bias toward ambitious builders starting early.",
               linkedinHref: "https://www.linkedin.com/in/saaras-mehan/"
             }
           ]
