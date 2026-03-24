@@ -192,9 +192,9 @@ const jobOpportunities: JobOpportunity[] = [
               name: "Julius Korfgen",
               title: "Co-Founder & CEO",
               credibility:
-                "Scaled 7-digit monthly ad spend and previously grew a lead platform past $10M monthly revenue.",
+                "Managed 7-digit monthly ad spend as a Marketing Director of one of the fastest-growing D2C brands in Europe. Scaled a lead platform from 0 to >$10M monthly revenue in just 12 weeks.",
               fitAngle:
-                "Strong fit if the candidate wants a commercially sharp founder who can translate product output into revenue fast.",
+                "Well aligned with the candidate’s interest in working closely with commercially sharp founders who’ve helped scale revenue quickly before.",
               linkedinHref: "https://www.linkedin.com/in/julius-koerfgen/"
             },
             {
@@ -204,8 +204,8 @@ const jobOpportunities: JobOpportunity[] = [
               credibility:
                 "15 years of full-stack experience and former Head of Engineering at two YC-backed companies.",
               fitAngle:
-                "Makes the role more attractive for a hands-on engineer who wants deep technical sparring from day one.",
-              linkedinHref: "https://www.linkedin.com/in/lukas-vollmer/"
+                "Aligns with your preference for working closely with a deeply technical founder who can push on product and engineering from day one.",
+              linkedinHref: "https://www.linkedin.com/in/lukasvollmer/"
             }
           ]
         }
@@ -306,7 +306,7 @@ const jobOpportunities: JobOpportunity[] = [
               credibility:
                 "Comes from a wholesale family business and previously worked at McKinsey and Cherry Ventures.",
               fitAngle:
-                "Good fit for a candidate who wants a commercially grounded founder with clear customer intuition and fundraising fluency.",
+                "Fits your preference for working closely with a commercially grounded founder who has clear customer intuition and fundraising fluency.",
               linkedinHref: "https://www.linkedin.com/in/benediktnolte/"
             },
             {
@@ -316,7 +316,7 @@ const jobOpportunities: JobOpportunity[] = [
               credibility:
                 "Previously built startups at Rocket Internet and advised mid-market digitization projects at Roland Berger.",
               fitAngle:
-                "Adds confidence that product decisions will stay close to actual operator workflows, not abstract roadmap theory.",
+                "Aligns with your interest in working on products shaped by real customer workflows rather than abstract roadmap theory.",
               linkedinHref: "https://www.linkedin.com/in/matthiasheinrichmorales/"
             }
           ]
@@ -413,9 +413,9 @@ const jobOpportunities: JobOpportunity[] = [
               name: "Matthew Wilson",
               title: "Co-Founder",
               credibility:
-                "Serial founder who previously built Omnipresent and has already scaled founder-led companies through real breakout growth.",
+                "3x founder. Founder/co-CEO at Omnipresent, fastest growing EF company (0 → $600m in 3 years).",
               fitAngle:
-                "Appeals to candidates who want to learn from someone who has seen both hypergrowth and the tradeoffs of building category-defining companies.",
+                "Perfectly aligns with candidates interest to work closely with repeat founders who've built fast-scaling companies before.",
               linkedinHref: "https://www.linkedin.com/in/matthew-wilson-671a757a/"
             },
             {
@@ -423,9 +423,9 @@ const jobOpportunities: JobOpportunity[] = [
               name: "Saaras Mehan",
               title: "Co-Founder",
               credibility:
-                "Repeat founder with sharp product instincts and a public track record of shipping quickly around AI-native recruiting workflows.",
+                "2x Founder. {YC, EF, Cambridge, Microsoft Research}-alum. Grew Kular.ai from $0 → $3m ARR in one year.",
               fitAngle:
-                "Great fit for a candidate who wants founder-level product taste, fast iteration, and a genuinely hands-on operating rhythm.",
+                "Strong fit if you want direct access to a technical founder with strong product taste, high standards, and a clear bias toward ambitious builders starting early.",
               linkedinHref: "https://www.linkedin.com/in/saaras-mehan/"
             }
           ]
