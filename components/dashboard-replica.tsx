@@ -44,11 +44,6 @@ type OpportunityTabId =
 
 type OpportunityTone = "green" | "yellow";
 
-type OpportunityDetail = {
-  value: string;
-  note?: string;
-};
-
 type FounderProfile = {
   photoSrc: string;
   name: string;
@@ -68,20 +63,11 @@ type OpportunityPanelData =
       bullets: string[];
     }
   | {
-      variant: "location";
-      visaSupport?: OpportunityDetail;
-      costOfLiving?: OpportunityDetail;
-      rent?: OpportunityDetail;
-      verdict: string;
-      ctaLabel: string;
-    }
-  | {
       variant: "team";
       fitSummary: string;
       founders: [FounderProfile, FounderProfile];
     };
 
-type LocationPanelData = Extract<OpportunityPanelData, { variant: "location" }>;
 type TeamPanelData = Extract<OpportunityPanelData, { variant: "team" }>;
 
 type OpportunityTab = {
@@ -157,22 +143,8 @@ const jobOpportunities: JobOpportunity[] = [
         icon: MapPin,
         panelTitle: "Excellent on location",
         panel: {
-          variant: "location",
-          visaSupport: {
-            value: "Supported",
-            note: "Visa sponsorship and relocation are explicitly mentioned."
-          },
-          costOfLiving: {
-            value: "$2.4k/mo",
-            note: "Typical monthly spend excluding rent in SF."
-          },
-          rent: {
-            value: "$3.8k/mo",
-            note: "Typical 1BR close to SoMa / Mission Bay."
-          },
-          verdict:
-            "High-conviction if the candidate wants max founder proximity and can handle SF burn from day one.",
-          ctaLabel: "Ask Jack about relocation"
+          variant: "body",
+          body: "Role is in San Francisco, a top choice location, with relocation and visa sponsorship provided."
         }
       },
       compensation: {
@@ -282,22 +254,8 @@ const jobOpportunities: JobOpportunity[] = [
         panelTitle: "Good on location",
         tone: "yellow",
         panel: {
-          variant: "location",
-          visaSupport: {
-            value: "Needs confirmation",
-            note: "Hybrid Berlin role, but sponsorship is not stated publicly."
-          },
-          costOfLiving: {
-            value: "EUR1.3k/mo",
-            note: "Typical monthly spend excluding rent in Berlin."
-          },
-          rent: {
-            value: "EUR1.9k/mo",
-            note: "Typical 1BR in Mitte / Prenzlauer Berg."
-          },
-          verdict:
-            "Practical if Berlin is a real second-choice base, but the candidate should ask early about relocation and office cadence.",
-          ctaLabel: "Ask Jack about relocation"
+          variant: "body",
+          body: "Berlin-based role aligns with secondary location preference; relocation and visa sponsorship are not explicitly mentioned."
         }
       },
       compensation: {
@@ -406,22 +364,8 @@ const jobOpportunities: JobOpportunity[] = [
         icon: MapPin,
         panelTitle: "Excellent on location",
         panel: {
-          variant: "location",
-          visaSupport: {
-            value: "Needs confirmation",
-            note: "UK sponsorship is not stated publicly."
-          },
-          costOfLiving: {
-            value: "GBP1.6k/mo",
-            note: "Typical monthly spend excluding rent in East London."
-          },
-          rent: {
-            value: "GBP2.4k/mo",
-            note: "Typical 1BR around Shoreditch / Hoxton."
-          },
-          verdict:
-            "A very strong location fit if the candidate wants London and daily in-person intensity, with visa logistics worth clarifying early.",
-          ctaLabel: "Ask Jack about relocation"
+          variant: "body",
+          body: "Shoreditch-based, fully in-person work is a perfect match for the candidate’s preference for London and close collaboration with high-caliber builders."
         }
       },
       compensation: {
@@ -701,58 +645,6 @@ function OpportunityPill({
   );
 }
 
-function LocationPanel({ panel }: { panel: LocationPanelData }) {
-  const statItems = [
-    panel.costOfLiving
-      ? {
-          label: "Cost of living",
-          detail: panel.costOfLiving
-        }
-      : null,
-    panel.rent
-      ? {
-          label: "Rent",
-          detail: panel.rent
-        }
-      : null
-  ].filter(Boolean) as Array<{ label: string; detail: OpportunityDetail }>;
-
-  return (
-    <div className="opportunity-location-stack">
-      {panel.visaSupport ? (
-        <div className="opportunity-location-row">
-          <span className="opportunity-location-label">Visa support</span>
-          <div className="opportunity-location-detail">
-            <strong>{panel.visaSupport.value}</strong>
-            {panel.visaSupport.note ? <span>{panel.visaSupport.note}</span> : null}
-          </div>
-        </div>
-      ) : null}
-
-      {statItems.length ? (
-        <div className="opportunity-location-stats">
-          {statItems.map((item) => (
-            <div key={item.label} className="opportunity-location-stat">
-              <span className="opportunity-location-stat-label">{item.label}</span>
-              <strong className="opportunity-location-stat-value">{item.detail.value}</strong>
-              {item.detail.note ? (
-                <span className="opportunity-location-stat-note">{item.detail.note}</span>
-              ) : null}
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      <p className="opportunity-location-verdict">{panel.verdict}</p>
-
-      <button type="button" className="opportunity-panel-cta">
-        <MessageSquare className="opportunity-panel-cta-icon" />
-        <span>{panel.ctaLabel}</span>
-      </button>
-    </div>
-  );
-}
-
 function FounderCard({ founder }: { founder: FounderProfile }) {
   return (
     <article className="opportunity-founder-card">
@@ -813,8 +705,6 @@ function OpportunityPanel({ tab }: { tab: OpportunityTab }) {
             ))}
           </ul>
         );
-      case "location":
-        return <LocationPanel panel={tab.panel} />;
       case "team":
         return <TeamPanel panel={tab.panel} />;
       default:
