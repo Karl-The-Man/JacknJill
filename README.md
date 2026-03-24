@@ -2,7 +2,7 @@
 
 A small product concept built in Next.js that adds a Team tab to the Jack & Jill job card, giving candidates more context on who they’d work with and why the role could be a strong fit.
 
-![Team tab screenshot example 1](./public/jacknjill_tab.png)
+![Team tab screenshot example 1](./public/jack&jill_tab.png)
 
 ## Why I built this
 
